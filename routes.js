@@ -27,6 +27,5 @@ router.post('/contracts/cancel', authenticateToken, contractController.CancelCon
 router.post('/contracts/create', authenticateToken, contractController.createContract);
 router.post('/payments/create', authenticateToken, paymentController.createPayment);
 router.post('/payments/email', authenticateToken, paymentController.getPaymentsByEmail);
-router.post('/vehicles/create',authenticateToken, contractController.createContract);
 
 module.exports = router;

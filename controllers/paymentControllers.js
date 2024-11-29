@@ -4,19 +4,24 @@ const axios = require('axios');
  * Create Payment
  */
 exports.createPayment = async (req, res) => {
-    const { contract_id, journal, amount } = req.body;
+    console.log("Now in the payment middleware");
 
-    if (!contract_id || !journal || !amount) {
-        return res.status(400).json({ error: 'Please provide contract_id, journal, and amount.' });
+    const contract_id = req.contractId; // Use the value set in the previous middleware
+    const journal = req.journal;
+
+    console.log("Contract ID and journal: ", contract_id, journal);
+
+    if (!contract_id ) {
+        return res.status(400).json({ error: 'Please provide contract_id and journal.' });
     }
 
     try {
         const response = await axios.post(`${process.env.BASE_URL}/create_payment_user`, {
             contract_id,
-            journal,
-            amount,
+            
         });
-        res.status(201).json(response.data);
+        console.log("Payment created successfully");
+        res.status(201).json(response.data); // Send response here after payment is created
     } catch (error) {
         res.status(500).json({ error: error.response?.data || error.message });
     }
