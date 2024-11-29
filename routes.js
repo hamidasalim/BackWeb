@@ -9,9 +9,6 @@ const paymentController = require('./controllers/paymentControllers');
 const userController = require('./controllers/userControllers');
 const vehicleController = require('./controllers/vehiculeControllers');
 const upload = require('./middleware/multer'); // Import the multer configuration
-
-
-
 // Public Routes (No Authentication Required)
 router.post('/users/login', userController.loginUser);
 router.post('/users/register', userController.registerUser);
@@ -19,6 +16,11 @@ router.post('/vehicles/available', vehicleController.getAvailableVehicles);
 
 
 // Protected Routes (Require Authentication)
+
+router.post('/users/update', authenticateToken, userController.updateUser);
+router.post('/users/password', authenticateToken, userController.updatePaswword);
+
+
 router.post('/contracts/email', authenticateToken, contractController.getContractsByEmail);
 router.post('/contracts/create', authenticateToken, contractController.createContract);
 

@@ -5,6 +5,7 @@ const upload = multer();
 const fs = require('fs');
 const path = require('path');
 
+
 // Secret key for signing tokens (ensure this is secure and stored safely)
 
 /**
@@ -24,12 +25,6 @@ exports.loginUser = async (req, res) => {
     try {
         // Make the login request to the Odoo API
         const response = await axios.post(`${process.env.BASE_URL}/login_user`, { email, password });
-
-        console.log("check  data user data  ",response.data.result.user_data);
-
-
-       
-
 
         // Generate a JWT token
         const token = jwt.sign({ email: response.data.result.user_data.email, name: response.data.result.user_data.name }, process.env.SECRET_KEY, {
@@ -118,16 +113,67 @@ exports.registerUser = async (req, res) => {
  * Update User
  */
 exports.updateUser = async (req, res) => {
-    const { email, ...fields } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ error: 'Please provide an email to identify the user.' });
-    }
-
     try {
-        const response = await axios.post(`${process.env.BASE_URL}/update_user`, { email, ...fields });
-        res.status(200).json(response.data);
+        const { email, ...updateData } = req.body;
+
+        // Check if email is provided
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required to identify the user.' });
+        }
+
+        // Prepare the data for Odoo endpoint
+        const data = { email, ...updateData };
+        console.log(data)
+
+        // Send the update request to Odoo API
+        const response = await axios.post(`${process.env.BASE_URL}/update_user`, data);
+
+        // If Odoo responds with a success message, return the success message from our Node.js endpoint
+        if (response.data.result.updated_fields) {
+            return res.status(200).json({
+                message: response.data.message,
+                updatedFields: response.data.updated_fields
+            });
+        }
+
+        // Handle any errors returned by the Odoo API
+        return res.status(400).json({ error: response.data.error || 'Error updating user in Odoo.' });
+
     } catch (error) {
-        res.status(500).json({ error: error.response?.data || error.message });
+        console.error('Error in updateUser:', error.message);
+        return res.status(500).json({ error: error.response?.data || 'Error processing request.' });
+    }
+};
+
+exports.updatePaswword = async (req, res) => {
+    try {
+        const { email, ...updateData } = req.body;
+
+        // Check if email is provided
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required to identify the user.' });
+        }
+
+        // Prepare the data for Odoo endpoint
+        const data = { email, ...updateData };
+        console.log(data)
+
+        // Send the update request to Odoo API
+        const response = await axios.post(`${process.env.BASE_URL}/update_password`, data);
+
+        // If Odoo responds with a success message, return the success message from our Node.js endpoint
+        if (response.data.result.message == 'Password updated successfully') {
+            console.log(response.data.message)
+            return res.status(200).json({
+                message: response.data.message,
+            });
+        }
+
+        // Handle any errors returned by the Odoo API
+        return res.status(400).json({ error: response.data.error || 'Error updating user in Odoo.' });
+
+    } catch (error) {
+        console.error('Error in updateUser:', error.message);
+        return res.status(500).json({ error: error.response?.data || 'Error processing request.' });
     }
 };
