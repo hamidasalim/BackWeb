@@ -19,6 +19,8 @@ router.post('/vehicles/available', vehicleController.getAvailableVehicles);
 
 router.post('/users/update', authenticateToken, userController.updateUser);
 router.post('/users/password', authenticateToken, userController.updatePaswword);
+router.post('/users/getUser', authenticateToken, userController.getUser);
+
 
 
 router.post('/contracts/email', authenticateToken, contractController.getContractsByEmail);

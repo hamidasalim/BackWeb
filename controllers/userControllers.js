@@ -123,7 +123,6 @@ exports.updateUser = async (req, res) => {
 
         // Prepare the data for Odoo endpoint
         const data = { email, ...updateData };
-        console.log(data)
 
         // Send the update request to Odoo API
         const response = await axios.post(`${process.env.BASE_URL}/update_user`, data);
@@ -156,14 +155,12 @@ exports.updatePaswword = async (req, res) => {
 
         // Prepare the data for Odoo endpoint
         const data = { email, ...updateData };
-        console.log(data)
 
         // Send the update request to Odoo API
         const response = await axios.post(`${process.env.BASE_URL}/update_password`, data);
 
         // If Odoo responds with a success message, return the success message from our Node.js endpoint
         if (response.data.result.message == 'Password updated successfully') {
-            console.log(response.data.message)
             return res.status(200).json({
                 message: response.data.message,
             });
@@ -171,6 +168,37 @@ exports.updatePaswword = async (req, res) => {
 
         // Handle any errors returned by the Odoo API
         return res.status(400).json({ error: response.data.error || 'Error updating user in Odoo.' });
+
+    } catch (error) {
+        console.error('Error in updateUser:', error.message);
+        return res.status(500).json({ error: error.response?.data || 'Error processing request.' });
+    }
+};
+exports.getUser = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Check if email is provided
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required to identify the user.' });
+        }
+
+        // Prepare the data for Odoo endpoint
+        const data = { email};
+
+        // Send the update request to Odoo API
+        const response = await axios.post(`${process.env.BASE_URL}/get_user`, data);
+
+        // If Odoo responds with a success message, return the success message from our Node.js endpoint
+        if (response.data.result.user_data ) {
+            return res.status(200).json({
+                user:response.data.result.user_data,
+                message: response.data.message,
+            });
+        }
+
+        // Handle any errors returned by the Odoo API
+        return res.status(400).json({ error: response.data.error || 'Error fetching user in Odoo.' });
 
     } catch (error) {
         console.error('Error in updateUser:', error.message);
