@@ -1,35 +1,33 @@
-// server.js
+require('dotenv').config();
+
 const express = require('express');
+const bodyParser = require('body-parser');
+const routes = require('./routes');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const multer = require('multer');
+const path = require('path');
 
-// Load environment variables
-dotenv.config();
 
-// Connect to MongoDB
-connectDB();
 
-// Initialize Express app
 const app = express();
 
-// Use CORS to allow requests from the frontend
-app.use(cors({ origin: 'http://localhost:5173' })); // Allow requests from frontend origin
-
-// Middleware to parse JSON
-app.use(express.json());
-const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
-// Define routes
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
-
-const profileRoutes = require('./routes/profile');
-app.use('/api/profile', profileRoutes);
+app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors({
+    origin: 'http://127.0.0.1:5173', // Allow only your frontend's origin
+    credentials: true, // Allow credentials such as cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+}));
 
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+app.use('/api', routes);
+
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
