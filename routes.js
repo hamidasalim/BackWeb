@@ -15,21 +15,18 @@ router.post('/users/register', userController.registerUser);
 router.post('/vehicles/available', vehicleController.getAvailableVehicles);
 
 
+
+
 // Protected Routes (Require Authentication)
 
 router.post('/users/update', authenticateToken, userController.updateUser);
 router.post('/users/password', authenticateToken, userController.updatePaswword);
 router.post('/users/getUser', authenticateToken, userController.getUser);
-
-
-
 router.post('/contracts/email', authenticateToken, contractController.getContractsByEmail);
+router.post('/contracts/cancel', authenticateToken, contractController.CancelContract);
 router.post('/contracts/create', authenticateToken, contractController.createContract);
-
 router.post('/payments/create', authenticateToken, paymentController.createPayment);
 router.post('/payments/email', authenticateToken, paymentController.getPaymentsByEmail);
-
-
-router.post('/users/update', authenticateToken, userController.updateUser);
+router.post('/vehicles/create',authenticateToken, contractController.createContract);
 
 module.exports = router;

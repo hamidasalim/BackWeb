@@ -22,7 +22,7 @@ exports.getContractsByEmail = async (req, res) => {
  * Create Contract
  */
 exports.createContract = async (req, res) => {
-    const { email, car_id, start_date, end_date, acompte } = req.body;
+    const { email, car_id, start_date, end_date, fuel_level } = req.body;
 
     if (!email || !car_id || !start_date || !end_date) {
         return res.status(400).json({ error: 'Please provide email, car_id, start_date, and end_date.' });
@@ -34,7 +34,25 @@ exports.createContract = async (req, res) => {
             car_id,
             start_date,
             end_date,
-            acompte,
+            fuel_level,
+        });
+        res.status(201).json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: error.response?.data || error.message });
+    }
+};
+
+exports.CancelContract = async (req, res) => {
+    const { email, contract_id} = req.body;
+
+    if (!email || !contract_id ) {
+        return res.status(400).json({ error: 'Please provide email, contract_id.' });
+    }
+
+    try {
+        const response = await axios.post(`${process.env.BASE_URL}/cancel_contract_user`, {
+            email,
+            contract_id,
         });
         res.status(201).json(response.data);
     } catch (error) {
