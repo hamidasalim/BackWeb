@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('./middleware/middle');
+const { sendEmail } = require('./controllers/emailController');
+
+router.post('/send-email', sendEmail);
 
 
 // Import controllers
