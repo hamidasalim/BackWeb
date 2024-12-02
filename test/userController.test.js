@@ -182,5 +182,20 @@ describe('User Controller', () => {
                 expect(res.body.user).to.include({ email: 'test@test.com', name: 'Test User' });
             });
         });
+        describe('Error 500', () => {
+          it('should return 500 if the server encounters an error', async () => {
+            axiosMock.onPost(`${process.env.BASE_URL}/register_user`).reply(500, {
+                error: 'Internal Server Error'
+            });
+    
+            const res = await chai
+                .request(app)
+                .post('/api/users/register')
+                .send({ name: "hhhh" ,email: 'test@test.com', password: 'password123' });
+    
+            expect(res).to.have.status(500);
+            expect(res.body).to.have.property('error');
+        });
+      });
     });
 });

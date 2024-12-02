@@ -43,9 +43,7 @@ exports.createContract = async (req, res) => {
      
         // Extract contract_id for the payment step
         const contract_id = createContractResponse.data.result.contract_id;
-        const journal = "Banque";
 
-        console.log( contract_id, journal);
 
         // Step 2: Create Payment
         const createPaymentResponse = await axios.post(`${process.env.BASE_URL}/create_payment_user`, {
@@ -54,13 +52,11 @@ exports.createContract = async (req, res) => {
 
         
 
-        console.log( createPaymentResponse.data.result);
 
         // Send the final response to the client after both steps are successful
-        res.status(201).json({
-            message: 'Contract and payment created successfully!',
-            contract: createContractResponse.data.result,
-            payment: createPaymentResponse.data.result,
+        res.status(200).json({
+            message: 'Contract created successfully!',
+            contract: createContractResponse.data.result.contract_name
         });
 
     } catch (error) {
