@@ -5,11 +5,6 @@ const bodyParser = require('body-parser');
 const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const multer = require('multer');
-const path = require('path');
-
-
-
 
 const app = express();
 
@@ -22,13 +17,15 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
 
-
-
-
 app.use('/api', routes);
 
+if (require.main === module) {
+    // Start the server only if this file is executed directly
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// Export the app for testing or external usage
+module.exports = app;

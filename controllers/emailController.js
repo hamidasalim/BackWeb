@@ -15,8 +15,7 @@ const sendEmail = async (req, res) => {
     const { name, email, message } = req.body; // Extract form data
 
     try {
-        console.log(`Sending email from: ${email} | To: hamida.slim00@gmail.com`);
-        console.log(req.body)
+
 
         // Define the email content
         const mailOptions = {

@@ -130,8 +130,8 @@ exports.updateUser = async (req, res) => {
         // If Odoo responds with a success message, return the success message from our Node.js endpoint
         if (response.data.result.updated_fields) {
             return res.status(200).json({
-                message: response.data.message,
-                updatedFields: response.data.updated_fields
+                message: response.data.result.message,
+                updatedFields: response.data.result.updated_fields
             });
         }
 
@@ -162,7 +162,7 @@ exports.updatePaswword = async (req, res) => {
         // If Odoo responds with a success message, return the success message from our Node.js endpoint
         if (response.data.result.message == 'Password updated successfully') {
             return res.status(200).json({
-                message: response.data.message,
+                message: response.data.result.message,
             });
         }
 
