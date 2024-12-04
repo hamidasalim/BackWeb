@@ -122,12 +122,15 @@ exports.updateUser = async (req, res) => {
 
         // Prepare the data for Odoo endpoint
         const data = { email, ...updateData };
+        console.log(data)
+
 
         // Send the update request to Odoo API
         const response = await axios.post(`${process.env.BASE_URL}/update_user`, data);
 
         // If Odoo responds with a success message, return the success message from our Node.js endpoint
         if (response.data.result.updated_fields) {
+            console.log(data)
             return res.status(200).json({
                 message: response.data.result.message,
                 updatedFields: response.data.result.updated_fields
