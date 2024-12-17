@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://127.0.0.1:5173', // Allow only your frontend's origin
+    origin: ['http://127.0.0.1:5173', 'http://localhost:5173'],// Allow only your frontend's origin
     credentials: true, // Allow credentials such as cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
