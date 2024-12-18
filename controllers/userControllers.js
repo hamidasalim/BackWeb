@@ -13,6 +13,8 @@ const path = require('path');
  */
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
+    console.log(email)
+    console.log(password)
 
     if (!email || !password) {
         return res.status(400).json({ error: 'Please provide both email and password.' });
@@ -23,8 +25,14 @@ exports.loginUser = async (req, res) => {
     }
 
     try {
+
         // Make the login request to the Odoo API
         const response = await axios.post(`${process.env.BASE_URL}/login_user`, { email, password });
+        if (response.data.result.error){
+            res.status(500).json({ error: response.data.result.error });
+        }
+
+        console.log(response.data)
 
         // Generate a JWT token
         const token = jwt.sign({ email: response.data.result.user_data.email, name: response.data.result.user_data.name }, process.env.SECRET_KEY, {
